@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/devankitbhagat/nodeframe#readme",
   "dependencies": {
-    "mysql": "^2.16.0"
+    "async-waterfall": "^0.1.5",
+    "mysql": "^2.16.0",
+    "sync": "^0.2.5"
   }
 }
