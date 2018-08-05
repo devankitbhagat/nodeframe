@@ -2,8 +2,8 @@
 
 //dependencies
 var mysql = require('mysql')
-var _config = require('config')
-var _msg = require('strings')
+// var _config = require('config')
+// var _msg = require('strings')
 
 //initializations
 var db = {}
@@ -11,9 +11,9 @@ var connection = false;
 var connectionRetry = 0;
 var dbConfig = {
   host     : 'localhost',
-  user     : 'me',
-  password : 'secret',
-  database : 'my_db'
+  user     : 'root',
+  password : 'password',
+  database : 'clamour'
 }
 
 
@@ -26,12 +26,12 @@ db.init = function(){
 
     try {
       connection = mysql.createConnection(dbConfig);
-      debugInfo("Connected to mysql database", dbConfig.database)
+      console.log("Connected to mysql database", dbConfig.database)
       resolve(connection);
-    } catch (e => {
-      console.log(_msg.db_connection_error, "SQL CONNECTION: ",e)
+    } catch (e) {
+      console.log("SQL CONNECTION: ",e)
       reject(e)
-    })
+    }
 
   });
 }
@@ -46,11 +46,11 @@ db.getConnection = function(){
     else{
 
       db.init().then((connection) => {
-        debugInfo("New sql Database connection created")
+        console.log("New sql Database connection created")
         resolve(connection)
       })
       .catch(e => {
-        console.log(_msg.db_get_connection_error, "SQL CONNECTION: ",e)
+        console.log("SQL CONNECTION: ",e)
         reject(e)
       })
     }
@@ -65,34 +65,37 @@ db.executeQuery = function(query){
   return new Promise((resolve, reject) => {
 
     db.getConnection().then(con => {
-      con.query(query).then(res => {
-        resolve(res)
+      console.log("EXECUTING", con)
+      con.query(query, function (err, result) {
+        resolve(result)
       })
     })
     .catch(e => {
-      console.log(_msg.db_query_execution_error,"SQL CONNECTION: ", query ,e)
+      console.log("SQL CONNECTION: ", query ,e)
       reject(e)
     })
 
   })
 }
 
-db.refreshConnection = function(){
+refreshConnection = function(){
 
   try {
 
-    if(connection)
+    if(connection){
+      console.log("ENDING CONNECTION");
       connection.end()
+    }
 
     connection = false;
-    db.init.init().then(con => {
-      debugInfo("Sql Connection refreshed successfully")
-      setTimeOut(db.refreshConnection(), _config.sql_reconnect_delay);
+    db.init().then(con => {
+      console.log("Sql Connection refreshed successfully")
+      setTimeout(() => refreshConnection(), 10000);
     })
 
-  } catch (e => {
-    console.log(_msg.db_refresh_connection_error,"SQL CONNECTION: ",e)
-  })
+  } catch (e) {
+    console.log("SQL CONNECTION: ",e)
+  }
 }
 
 //exports

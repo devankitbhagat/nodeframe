@@ -5,7 +5,7 @@
 
 //dependencies
 var mysql = require('mysql')
-// var sqlConnectionManager = require('sqlConnectionManager')
+var sqlConnectionManager = require('./sqlConnectionManager.js')
 
 //initializations
 var queryMethods = {}
@@ -18,7 +18,10 @@ queryMethods.doSelectOne = function(queryString, params, callback){
       callback(error)
     else {
       // execute query
-      console.log(preparedQuery)
+      sqlConnectionManager
+      .executeQuery(preparedQuery)
+      .then((result) => {callback(null, result)})
+      .catch(error => {callback(error)})
     }
   })
 }
@@ -29,7 +32,11 @@ queryMethods.doSelect = function(queryString, params, callback){
       callback(error)
     else {
       // execute query
-      console.log(preparedQuery)
+      sqlConnectionManager
+      .executeQuery(preparedQuery)
+      .then((result) => {callback(null, result)})
+      .catch(error => {callback(error)})
+
     }
   })
 }
@@ -40,7 +47,11 @@ queryMethods.doInsert = function(queryString, params, callback){
       callback(error)
     else {
       // execute query
-      console.log(preparedQuery)
+      sqlConnectionManager
+      .executeQuery(preparedQuery)
+      .then((result) => {callback(null, result.insertId)})
+      .catch(error => {callback(error)})
+
     }
   })
 }
@@ -51,7 +62,11 @@ queryMethods.doUpdate = function(queryString, params, callback){
       callback(error)
     else {
       // execute query
-      console.log(preparedQuery)
+      sqlConnectionManager
+      .executeQuery(preparedQuery)
+      .then((result) => {callback(null, result.affectedRows)})
+      .catch(error => {callback(error)})
+
     }
   })
 }
@@ -62,7 +77,11 @@ queryMethods.doDelete = function(queryString, params, callback){
       callback(error)
     else {
       // execute query
-      console.log(preparedQuery)
+      sqlConnectionManager
+      .executeQuery(preparedQuery)
+      .then((result) => {callback(null, result)})
+      .catch(error => {callback(error)})
+
     }
   })
 }
@@ -73,7 +92,11 @@ queryMethods.executeMultiple = function(){
       callback(error)
     else {
       // execute query
-      console.log(preparedQuery)
+      sqlConnectionManager
+      .executeQuery(preparedQuery)
+      .then((result) => {callback(null, result)})
+      .catch(error => {callback(error)})
+
     }
   })
 }
