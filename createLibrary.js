@@ -169,13 +169,12 @@ var appendDeleteMethod = function(callback){
 }
 
 var writeToFile = function(content, callback){
-  fs.appendFileSync(fileName+extension, content, function(error){
-      if(error)
-        callback(error)
-      else
-        callback(null)
-    }
-  )
+  try {
+    fs.appendFileSync(fileName+extension, content)
+    callback(null)
+  } catch (e) {
+    callback(e)
+  }
 }
 
 var init = function(){

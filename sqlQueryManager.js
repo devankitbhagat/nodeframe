@@ -20,7 +20,7 @@ queryMethods.doSelectOne = function(queryString, params, callback){
       // execute query
       sqlConnectionManager
       .executeQuery(preparedQuery)
-      .then((result) => {callback(null, result)})
+      .then((result) => {callback(null, result[0])})
       .catch(error => {callback(error)})
     }
   })
@@ -34,7 +34,7 @@ queryMethods.doSelect = function(queryString, params, callback){
       // execute query
       sqlConnectionManager
       .executeQuery(preparedQuery)
-      .then((result) => {callback(null, result)})
+      .then((result) => { result = (typeof); callback(null, )})
       .catch(error => {callback(error)})
 
     }

@@ -2,20 +2,17 @@
 
 //dependencies
 var mysql = require('mysql')
-// var _config = require('config')
-// var _msg = require('strings')
+var _dbConfig = require('./config/dbConfig')
 
 //initializations
 var db = {}
 var connection = false;
-var connectionRetry = 0;
 var dbConfig = {
-  host     : 'localhost',
-  user     : 'root',
-  password : 'password',
-  database : 'clamour'
+  host     : _dbConfig.sql.hosst,
+  user     : _dbConfig.sql.user_name,
+  password : _dbConfig.sql.password,
+  database : _dbConfig.sql.database
 }
-
 
 //methods
 
@@ -25,9 +22,15 @@ db.init = function(){
   return new Promise((resolve, reject) => {
 
     try {
+
+      if(typeof dbConfig.database == 'undefined')  throw "Database name not defined"
+
       connection = mysql.createConnection(dbConfig);
-      console.log("Connected to mysql database", dbConfig.database)
-      resolve(connection);
+      connection.connect(function(err) {
+        if (err) throw err;
+        resolve(connection);
+      });
+
     } catch (e) {
       console.log("SQL CONNECTION: ",e)
       reject(e)
@@ -65,7 +68,7 @@ db.executeQuery = function(query){
   return new Promise((resolve, reject) => {
 
     db.getConnection().then(con => {
-      console.log("EXECUTING", con)
+
       con.query(query, function (err, result) {
         resolve(result)
       })
@@ -90,7 +93,7 @@ refreshConnection = function(){
     connection = false;
     db.init().then(con => {
       console.log("Sql Connection refreshed successfully")
-      setTimeout(() => refreshConnection(), 10000);
+      setTimeout(() => refreshConnection(), _dbConfig.sql.refresh_connection_interval);
     })
 
   } catch (e) {
