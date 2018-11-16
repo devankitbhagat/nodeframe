@@ -34,7 +34,7 @@ queryMethods.doSelect = function(queryString, params, callback){
       // execute query
       sqlConnectionManager
       .executeQuery(preparedQuery)
-      .then((result) => { result = (typeof); callback(null, )})
+      .then((result) => { callback(null, result)})
       .catch(error => {callback(error)})
 
     }
@@ -79,22 +79,7 @@ queryMethods.doDelete = function(queryString, params, callback){
       // execute query
       sqlConnectionManager
       .executeQuery(preparedQuery)
-      .then((result) => {callback(null, result)})
-      .catch(error => {callback(error)})
-
-    }
-  })
-}
-
-queryMethods.executeMultiple = function(){
-  prepareQuery(queryString, params, function(error, preparedQuery){
-    if(error)
-      callback(error)
-    else {
-      // execute query
-      sqlConnectionManager
-      .executeQuery(preparedQuery)
-      .then((result) => {callback(null, result)})
+      .then((result) => {callback(null, result.affectedRows)})
       .catch(error => {callback(error)})
 
     }

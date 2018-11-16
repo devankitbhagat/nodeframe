@@ -1,5 +1,3 @@
-
-
 //dependencies
 var mysql = require('mysql')
 var _dbConfig = require('./config/dbConfig')
@@ -7,6 +5,7 @@ var _dbConfig = require('./config/dbConfig')
 //initializations
 var db = {}
 var connection = false;
+var timer = null;
 var dbConfig = {
   host     : _dbConfig.sql.hosst,
   user     : _dbConfig.sql.user_name,
@@ -24,10 +23,11 @@ db.init = function(){
     try {
 
       if(typeof dbConfig.database == 'undefined')  throw "Database name not defined"
-
       connection = mysql.createConnection(dbConfig);
       connection.connect(function(err) {
         if (err) throw err;
+        if(timer == null)
+          setTimeout(() => closeConnection(), 0);
         resolve(connection);
       });
 
@@ -44,10 +44,9 @@ db.getConnection = function(){
 
   return new Promise((resolve, reject) => {
 
-    if(connection)
+    if(connection){
       resolve(connection)
-    else{
-
+    } else{
       db.init().then((connection) => {
         console.log("New sql Database connection created")
         resolve(connection)
@@ -74,6 +73,7 @@ db.executeQuery = function(query){
       })
     })
     .catch(e => {
+      connection = false;
       console.log("SQL CONNECTION: ", query ,e)
       reject(e)
     })
@@ -86,7 +86,6 @@ refreshConnection = function(){
   try {
 
     if(connection){
-      console.log("ENDING CONNECTION");
       connection.end()
     }
 
@@ -98,6 +97,24 @@ refreshConnection = function(){
 
   } catch (e) {
     console.log("SQL CONNECTION: ",e)
+  }
+}
+
+closeConnection = function(){
+  console.log("OPEN CONNECTIONS ")
+  var activeHandlers = process._getActiveHandles().length
+  var activeConnections = process._getActiveRequests().length
+  console.log(activeHandlers)
+  console.log(activeConnections)
+
+  if(activeHandlers == 0 && activeConnections == 0){
+    console.log("CLOSE CONNECTION")
+  } else {
+    console.log(timer)
+    clearTimeout(timer);
+    console.log(timer)
+    // if(timer == null)
+    //   setTimeout(() => closeConnection(), 0);
   }
 }
 
