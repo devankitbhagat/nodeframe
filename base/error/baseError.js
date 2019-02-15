@@ -1,11 +1,25 @@
 'use strict'
 
+let staticInstance = null;
+
 class baseError {
+
+    static getInstance() {
+        if( staticInstance == null ) {
+            staticInstance = new staticInstance()
+        }
+        return staticInstance
+    }
+
     constructor( errorType, errorCode, errorMessage, errorData ) {
         this.errorType = errorType
         this.errorCode = errorCode
         this.errorMessage = errorMessage
         this.errorData = errorData
+    }
+
+    buildApiResponse() {
+
     }
 
     buildError() {

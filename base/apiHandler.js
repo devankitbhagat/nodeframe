@@ -1,12 +1,19 @@
 'use strict'
 
-let baseError = require("./error/baseError")
-let authenticator = require("./authenticator")
+let staticInstance = null;
+let BaseError = require("base/error/baseError")
+let Authenticator = require("base/authenticator")
+let ResponseHandler = require("base/responseHandler")
 
 class apiHandler {
 
-    constructor( request ) {
-        this.request = request
+    constructor() {}
+
+    static getInstance() {
+        if( staticInstance == null ) {
+            staticInstance = new apiHandler()
+        }
+        return staticInstance
     }
 
     async executeApiRequest() {
@@ -20,7 +27,7 @@ class apiHandler {
 
         if( apiName == "" ) {
             //api not found
-            return "API NAME IS MANDATORY PARAMETER"
+            return ResponseHandler.getInstance().buildApiResponse(2, {})
         }
 
         try {
@@ -28,7 +35,7 @@ class apiHandler {
             initializeFile = require("./../api/"+apiName+"/"+apiName+"Initialize")
                
         } catch ( err ) {
-            return "API DOES NOT EXIST";
+            return ResponseHandler.getInstance().buildApiResponse(3, {})
         }
     
         let initializer = new initializeFile()
@@ -41,7 +48,7 @@ class apiHandler {
 
             if( userId == 0 || accessToken == "" ) {
                 //user_id and access_token is mandatory parameter for this api 
-                return "ERROR";
+                return ResponseHandler.getInstance().buildApiResponse(4, {})
             }
 
             let auth = new authenticator( userId, accessToken )
@@ -49,7 +56,7 @@ class apiHandler {
 
             if( auth.isAllowed == false ) {
                 // not allowed to execute api 
-                return authResponse.errorResponse
+                return ResponseHandler.getInstance().buildApiResponse(5, {})
             }
 
             action['userId'] = userId

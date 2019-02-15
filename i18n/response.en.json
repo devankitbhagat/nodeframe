@@ -1,0 +1,9 @@
+{
+    "1" : "Response Code Failure",
+    "2" : "api_name is mandatory parameter",
+    "3" : "api does not exist",
+    "4" : "user_id and access_token is mandatory parameter",
+    "5" : "Invalid Credentials",
+    "400" : "CUSTOM ERROR",
+    "200" : "Success"
+}
