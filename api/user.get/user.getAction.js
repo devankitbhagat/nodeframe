@@ -3,9 +3,8 @@
 class userGetAction {
 
     async executeAction() {
-        let result = {ac:123}
+        let result = {user_id:this.param1}
 
-        console.log(this.param1);
         return result;
     }
 }

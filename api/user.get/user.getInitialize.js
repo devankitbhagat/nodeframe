@@ -1,7 +1,7 @@
 'use strict'
 
 class userGetInitializer  {
-    
+
     getParameter() {
         let param = {}
 
@@ -11,7 +11,14 @@ class userGetInitializer  {
             default : "abc",
             required : true
         }
-        
+
+        param.param2 = {
+            name : "name",
+            type : "string",
+            default : "abc",
+            required : true
+        }
+
         return param;
     }
 }

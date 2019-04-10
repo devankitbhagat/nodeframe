@@ -1,5 +1,5 @@
 'use strict'
-let _config = require("./../config/setting")
+let _config = require("./../config/config")
 
 class authenticator {
 
